@@ -1,0 +1,8 @@
+aws_region        = "us-east-1"
+project_name      = "k8s-microservice-cms"
+environment       = "prod-demo"
+
+# Must be globally unique across all AWS accounts.
+state_bucket_name = "emmauopeople-k8s-microservice-cms-tfstate-prod-demo"
+
+lock_table_name   = "k8s-microservice-cms-terraform-locks"
