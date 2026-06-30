@@ -5,13 +5,12 @@ data "aws_iam_openid_connect_provider" "github" {
 }
 
 locals {
-  github_repo_full_name = "${var.github_owner}/${var.github_repo}"
-
-  allowed_subjects = [
-    "repo:${local.github_repo_full_name}:ref:refs/heads/main",
-    "repo:${local.github_repo_full_name}:ref:refs/heads/feature/*",
-    "repo:${local.github_repo_full_name}:ref:refs/heads/release/*"
-  ]
+  allowed_subjects = flatten([
+    for repo in var.github_repositories : [
+      for branch_pattern in var.allowed_branch_patterns :
+      "repo:${repo}:ref:refs/heads/${branch_pattern}"
+    ]
+  ])
 
   ecr_repository_arns = [
     for repo_name in var.ecr_repository_names :
@@ -21,7 +20,7 @@ locals {
 
 resource "aws_iam_role" "github_actions" {
   name        = var.github_actions_role_name
-  description = "IAM role assumed by GitHub Actions using OIDC for ${local.github_repo_full_name}."
+  description = "IAM role assumed by GitHub Actions using OIDC for the CMS platform and app repositories."
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
