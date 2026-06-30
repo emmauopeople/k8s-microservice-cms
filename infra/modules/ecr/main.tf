@@ -11,6 +11,8 @@ resource "aws_ecr_repository" "this" {
   encryption_configuration {
     encryption_type = "AES256"
   }
+
+  force_delete = false
 }
 
 resource "aws_ecr_lifecycle_policy" "this" {
@@ -22,7 +24,7 @@ resource "aws_ecr_lifecycle_policy" "this" {
     rules = [
       {
         rulePriority = 1
-        description  = "Remove untagged images after the configured number of days"
+        description  = "Expire untagged images after ${var.untagged_image_expiration_days} days"
         selection = {
           tagStatus   = "untagged"
           countType   = "sinceImagePushed"
@@ -35,12 +37,17 @@ resource "aws_ecr_lifecycle_policy" "this" {
       },
       {
         rulePriority = 2
-        description  = "Keep a limited number of tagged release images"
+        description  = "Keep only the last ${var.max_tagged_images} tagged images"
         selection = {
-          tagStatus     = "tagged"
-          tagPrefixList = ["dev", "staging", "prod", "sha"]
-          countType     = "imageCountMoreThan"
-          countNumber   = var.max_tagged_images
+          tagStatus = "tagged"
+          tagPrefixList = [
+            "dev",
+            "staging",
+            "prod",
+            "sha"
+          ]
+          countType   = "imageCountMoreThan"
+          countNumber = var.max_tagged_images
         }
         action = {
           type = "expire"
