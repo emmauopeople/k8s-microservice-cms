@@ -16,22 +16,31 @@ variable "environment" {
   default     = "prod-demo"
 }
 
-variable "github_owner" {
-  description = "GitHub repository owner."
-  type        = string
-  default     = "emmauopeople"
-}
-
-variable "github_repo" {
-  description = "GitHub repository name."
-  type        = string
-  default     = "k8s-microservice-cms"
-}
-
 variable "github_actions_role_name" {
   description = "IAM role name for GitHub Actions OIDC."
   type        = string
   default     = "k8s-microservice-cms-github-actions"
+}
+
+variable "github_repositories" {
+  description = "GitHub repositories allowed to assume this IAM role through OIDC."
+  type        = list(string)
+
+  default = [
+    "emmauopeople/k8s-microservice-cms",
+    "emmauopeople/church_app"
+  ]
+}
+
+variable "allowed_branch_patterns" {
+  description = "Branch patterns allowed to assume the GitHub Actions IAM role."
+  type        = list(string)
+
+  default = [
+    "main",
+    "feature/*",
+    "release/*"
+  ]
 }
 
 variable "ecr_repository_names" {
