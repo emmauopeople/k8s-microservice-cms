@@ -63,3 +63,39 @@ variable "single_nat_gateway" {
   type        = bool
   default     = true
 }
+
+variable "rds_instance_class" {
+  description = "RDS PostgreSQL instance class."
+  type        = string
+  default     = "db.t4g.micro"
+}
+
+variable "rds_allocated_storage" {
+  description = "Initial RDS storage in GiB."
+  type        = number
+  default     = 20
+}
+
+variable "rds_max_allocated_storage" {
+  description = "Maximum RDS storage in GiB for storage autoscaling."
+  type        = number
+  default     = 100
+}
+
+variable "rds_multi_az" {
+  description = "Enable Multi-AZ for RDS. False for demo cost control."
+  type        = bool
+  default     = false
+}
+
+variable "rds_backup_retention_period" {
+  description = "RDS automated backup retention in days."
+  type        = number
+  default     = 7
+}
+
+variable "rds_deletion_protection" {
+  description = "Enable RDS deletion protection. False for short-lived demo environments."
+  type        = bool
+  default     = false
+}
