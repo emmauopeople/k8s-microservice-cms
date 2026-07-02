@@ -33,3 +33,24 @@ output "private_db_subnet_ids" {
 output "nat_gateway_ids" {
   value = module.vpc.nat_gateway_ids
 }
+
+output "rds_endpoint" {
+  value = module.rds_postgres.db_endpoint
+}
+
+output "rds_security_group_id" {
+  value = module.rds_postgres.db_security_group_id
+}
+
+output "rds_subnet_group_name" {
+  value = module.rds_postgres.db_subnet_group_name
+}
+
+output "rds_application_database_names" {
+  value = module.rds_postgres.application_database_names
+}
+
+output "rds_master_user_secret_arn" {
+  value     = module.rds_postgres.master_user_secret_arn
+  sensitive = true
+}
