@@ -99,3 +99,19 @@ variable "rds_deletion_protection" {
   type        = bool
   default     = false
 }
+
+variable "document_bucket_force_destroy" {
+  description = "Allow Terraform destroy to delete a non-empty document bucket. True for demo cleanup."
+  type        = bool
+  default     = true
+}
+
+variable "document_bucket_cors_allowed_origins" {
+  description = "Allowed browser origins for S3 document uploads and downloads."
+  type        = list(string)
+  default = [
+    "https://prod.parishmanagmentsystem.org",
+    "http://localhost:3000",
+    "http://localhost:5173"
+  ]
+}
