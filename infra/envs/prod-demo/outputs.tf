@@ -54,3 +54,19 @@ output "rds_master_user_secret_arn" {
   value     = module.rds_postgres.master_user_secret_arn
   sensitive = true
 }
+
+output "document_bucket_name" {
+  value = module.s3_documents.bucket_name
+}
+
+output "document_bucket_arn" {
+  value = module.s3_documents.bucket_arn
+}
+
+output "document_bucket_regional_domain_name" {
+  value = module.s3_documents.bucket_regional_domain_name
+}
+
+output "document_bucket_cors_enabled" {
+  value = module.s3_documents.bucket_cors_enabled
+}
