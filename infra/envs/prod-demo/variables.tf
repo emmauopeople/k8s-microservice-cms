@@ -110,8 +110,32 @@ variable "document_bucket_cors_allowed_origins" {
   description = "Allowed browser origins for S3 document uploads and downloads."
   type        = list(string)
   default = [
-    "https://prod.parishmanagmentsystem.org",
+    "https://eks.gestionparoissiale.org",
     "http://localhost:3000",
     "http://localhost:5173"
   ]
+}
+
+variable "dns_zone_name" {
+  description = "Delegated Route 53 hosted zone name for the EKS demo."
+  type        = string
+  default     = "eks.gestionparoissiale.org"
+}
+
+variable "acm_certificate_domain_name" {
+  description = "Primary ACM certificate domain name."
+  type        = string
+  default     = "eks.gestionparoissiale.org"
+}
+
+variable "acm_subject_alternative_names" {
+  description = "ACM certificate subject alternative names."
+  type        = list(string)
+  default     = ["*.eks.gestionparoissiale.org"]
+}
+
+variable "enable_acm_certificate_validation" {
+  description = "Set true only after Namecheap delegates eks.gestionparoissiale.org to the Route 53 name servers."
+  type        = bool
+  default     = false
 }
