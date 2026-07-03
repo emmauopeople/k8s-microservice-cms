@@ -70,3 +70,31 @@ output "document_bucket_regional_domain_name" {
 output "document_bucket_cors_enabled" {
   value = module.s3_documents.bucket_cors_enabled
 }
+
+output "dns_zone_id" {
+  value = module.acm_route53.zone_id
+}
+
+output "dns_zone_name" {
+  value = module.acm_route53.zone_name
+}
+
+output "dns_name_servers" {
+  value = module.acm_route53.name_servers
+}
+
+output "acm_certificate_arn" {
+  value = module.acm_route53.certificate_arn
+}
+
+output "acm_certificate_status" {
+  value = module.acm_route53.certificate_status
+}
+
+output "acm_certificate_validation_record_fqdns" {
+  value = module.acm_route53.certificate_validation_record_fqdns
+}
+
+output "acm_certificate_validation_enabled" {
+  value = module.acm_route53.certificate_validation_enabled
+}
