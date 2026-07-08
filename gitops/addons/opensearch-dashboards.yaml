@@ -17,7 +17,7 @@ spec:
   source:
     repoURL: https://opensearch-project.github.io/helm-charts/
     chart: opensearch-dashboards
-    targetRevision: "*"
+    targetRevision: "3.7.0"
     helm:
       releaseName: opensearch-dashboards
       valueFiles: []
