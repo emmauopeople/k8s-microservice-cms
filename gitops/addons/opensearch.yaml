@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://opensearch-project.github.io/helm-charts/
+    chart: opensearch
+    targetRevision: "*"
+    helm:
+      releaseName: opensearch
+      valueFiles: []
+      values: |
+        clusterName: opensearch
+        fullnameOverride: opensearch
+        singleNode: true
+        replicas: 1
+        roles:
+          - master
+          - ingest
+          - data
+          - remote_cluster_client
+        persistence:
+          enabled: true
+          storageClass: gp3
+          size: 20Gi
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        opensearchJavaOpts: "-Xms512m -Xmx512m"
+        extraEnvs:
+          - name: DISABLE_INSTALL_DEMO_CONFIG
+            value: "true"
+          - name: DISABLE_SECURITY_PLUGIN
+            value: "true"
+        config:
+          opensearch.yml: |
+            cluster.name: opensearch
+            network.host: 0.0.0.0
+            discovery.type: single-node
+            plugins.security.disabled: true
+        service:
+          type: ClusterIP
+          httpPortName: http
+        antiAffinity: soft
