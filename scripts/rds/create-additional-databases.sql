@@ -3,4 +3,4 @@
 -- Run these statements after the RDS instance is available.
 
 CREATE DATABASE church_core_db;
-CREATE DATABASE document_db;
+CREATE DATABASE document_core_db;
