@@ -15,7 +15,7 @@ module "rds_postgres" {
   initial_database_name = "auth_db"
   additional_database_names = [
     "church_core_db",
-    "document_db"
+    "document_core_db"
   ]
 
   master_username         = "cms_admin"
