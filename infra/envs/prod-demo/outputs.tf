@@ -98,3 +98,15 @@ output "acm_certificate_validation_record_fqdns" {
 output "acm_certificate_validation_enabled" {
   value = module.acm_route53.certificate_validation_enabled
 }
+
+output "waf_web_acl_id" {
+  value = module.waf.web_acl_id
+}
+
+output "waf_web_acl_arn" {
+  value = module.waf.web_acl_arn
+}
+
+output "waf_web_acl_name" {
+  value = module.waf.web_acl_name
+}
