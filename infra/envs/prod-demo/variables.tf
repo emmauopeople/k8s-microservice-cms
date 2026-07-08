@@ -139,3 +139,9 @@ variable "enable_acm_certificate_validation" {
   type        = bool
   default     = false
 }
+
+variable "waf_rate_limit" {
+  description = "Maximum requests from a single IP address during a five-minute window."
+  type        = number
+  default     = 2000
+}
