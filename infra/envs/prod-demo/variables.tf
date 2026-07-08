@@ -145,3 +145,63 @@ variable "waf_rate_limit" {
   type        = number
   default     = 2000
 }
+
+variable "eks_kubernetes_version" {
+  description = "Kubernetes version for EKS. Null lets AWS use its current default supported version."
+  type        = string
+  default     = null
+}
+
+variable "eks_endpoint_public_access" {
+  description = "Enable public access to the EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "eks_endpoint_private_access" {
+  description = "Enable private access to the EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "eks_public_access_cidrs" {
+  description = "CIDR blocks allowed to access the public EKS API endpoint. Restrict this before a real production apply."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "eks_node_instance_types" {
+  description = "Instance types for the EKS managed node group."
+  type        = list(string)
+  default     = ["t3.medium"]
+}
+
+variable "eks_node_capacity_type" {
+  description = "Capacity type for EKS managed nodes."
+  type        = string
+  default     = "ON_DEMAND"
+}
+
+variable "eks_node_desired_size" {
+  description = "Desired number of EKS worker nodes."
+  type        = number
+  default     = 2
+}
+
+variable "eks_node_min_size" {
+  description = "Minimum number of EKS worker nodes."
+  type        = number
+  default     = 2
+}
+
+variable "eks_node_max_size" {
+  description = "Maximum number of EKS worker nodes."
+  type        = number
+  default     = 3
+}
+
+variable "eks_node_disk_size" {
+  description = "EKS worker node root disk size in GiB."
+  type        = number
+  default     = 30
+}
