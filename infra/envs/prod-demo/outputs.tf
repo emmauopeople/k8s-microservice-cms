@@ -110,3 +110,31 @@ output "waf_web_acl_arn" {
 output "waf_web_acl_name" {
   value = module.waf.web_acl_name
 }
+
+output "eks_cluster_name" {
+  value = module.eks.cluster_name
+}
+
+output "eks_cluster_arn" {
+  value = module.eks.cluster_arn
+}
+
+output "eks_cluster_endpoint" {
+  value = module.eks.cluster_endpoint
+}
+
+output "eks_cluster_security_group_id" {
+  value = module.eks.cluster_security_group_id
+}
+
+output "eks_node_group_name" {
+  value = module.eks.node_group_name
+}
+
+output "eks_node_group_arn" {
+  value = module.eks.node_group_arn
+}
+
+output "eks_cluster_log_group_name" {
+  value = module.eks.cluster_log_group_name
+}
