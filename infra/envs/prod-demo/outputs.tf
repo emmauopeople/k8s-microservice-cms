@@ -123,6 +123,10 @@ output "eks_cluster_endpoint" {
   value = module.eks.cluster_endpoint
 }
 
+output "eks_cluster_oidc_issuer_url" {
+  value = module.eks.cluster_oidc_issuer_url
+}
+
 output "eks_cluster_security_group_id" {
   value = module.eks.cluster_security_group_id
 }
@@ -137,4 +141,32 @@ output "eks_node_group_arn" {
 
 output "eks_cluster_log_group_name" {
   value = module.eks.cluster_log_group_name
+}
+
+output "irsa_oidc_provider_arn" {
+  value = module.irsa.oidc_provider_arn
+}
+
+output "irsa_aws_load_balancer_controller_role_arn" {
+  value = module.irsa.aws_load_balancer_controller_role_arn
+}
+
+output "irsa_external_dns_role_arn" {
+  value = module.irsa.external_dns_role_arn
+}
+
+output "irsa_ebs_csi_role_arn" {
+  value = module.irsa.ebs_csi_role_arn
+}
+
+output "irsa_document_service_s3_role_arn" {
+  value = module.irsa.document_service_s3_role_arn
+}
+
+output "irsa_app_secrets_reader_role_arn" {
+  value = module.irsa.app_secrets_reader_role_arn
+}
+
+output "irsa_app_secrets_reader_service_accounts" {
+  value = module.irsa.app_secrets_reader_service_accounts
 }
