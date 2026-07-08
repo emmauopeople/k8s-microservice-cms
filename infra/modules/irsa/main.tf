@@ -3,8 +3,8 @@ data "tls_certificate" "oidc" {
 }
 
 locals {
-  common_tags               = merge(var.tags, { Module = "irsa" })
-  oidc_provider_url         = replace(var.oidc_issuer_url, "https://", "")
+  common_tags                = merge(var.tags, { Module = "irsa" })
+  oidc_provider_url          = replace(var.oidc_issuer_url, "https://", "")
   document_bucket_object_arn = "${var.document_bucket_arn}/*"
 
   aws_load_balancer_controller_subject = "system:serviceaccount:${var.aws_load_balancer_controller_namespace}:${var.aws_load_balancer_controller_service_account}"
@@ -68,9 +68,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
     Statement = [
       {
         Effect = "Allow"
-        Action = [
-          "iam:CreateServiceLinkedRole"
-        ]
+        Action = ["iam:CreateServiceLinkedRole"]
         Resource = "*"
         Condition = {
           StringEquals = {
@@ -134,16 +132,12 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
       },
       {
         Effect = "Allow"
-        Action = [
-          "ec2:CreateSecurityGroup"
-        ]
+        Action = ["ec2:CreateSecurityGroup"]
         Resource = "*"
       },
       {
         Effect = "Allow"
-        Action = [
-          "ec2:CreateTags"
-        ]
+        Action = ["ec2:CreateTags"]
         Resource = "arn:aws:ec2:*:*:security-group/*"
         Condition = {
           StringEquals = {
@@ -244,7 +238,6 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
           "elasticloadbalancing:DeleteTargetGroup",
           "elasticloadbalancing:RegisterTargets",
           "elasticloadbalancing:DeregisterTargets",
-          "elasticloadbalancing:SetWebAcl",
           "elasticloadbalancing:ModifyListener",
           "elasticloadbalancing:AddListenerCertificates",
           "elasticloadbalancing:RemoveListenerCertificates",
@@ -299,9 +292,7 @@ resource "aws_iam_policy" "external_dns" {
     Statement = [
       {
         Effect = "Allow"
-        Action = [
-          "route53:ChangeResourceRecordSets"
-        ]
+        Action = ["route53:ChangeResourceRecordSets"]
         Resource = "arn:aws:route53:::hostedzone/${var.route53_zone_id}"
       },
       {
