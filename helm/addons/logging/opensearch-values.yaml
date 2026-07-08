@@ -1,0 +1,53 @@
+# Portfolio demo values for a small in-cluster OpenSearch deployment.
+# This is intentionally small and short-lived for screenshots/testing.
+# For real production, use security enabled, multiple data nodes, snapshots,
+# and preferably Amazon OpenSearch Service.
+
+clusterName: opensearch
+fullnameOverride: opensearch
+
+singleNode: true
+replicas: 1
+
+roles:
+  - master
+  - ingest
+  - data
+  - remote_cluster_client
+
+persistence:
+  enabled: true
+  storageClass: gp3
+  size: 20Gi
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+opensearchJavaOpts: "-Xms512m -Xmx512m"
+
+# Demo-only: security plugin disabled so Fluent Bit and Dashboards can connect
+# without managing certificates/users during the short-lived portfolio run.
+# Do not use this setting for real production.
+extraEnvs:
+  - name: DISABLE_INSTALL_DEMO_CONFIG
+    value: "true"
+  - name: DISABLE_SECURITY_PLUGIN
+    value: "true"
+
+config:
+  opensearch.yml: |
+    cluster.name: opensearch
+    network.host: 0.0.0.0
+    discovery.type: single-node
+    plugins.security.disabled: true
+
+service:
+  type: ClusterIP
+  httpPortName: http
+
+antiAffinity: soft
