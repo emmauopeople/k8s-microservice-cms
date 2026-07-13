@@ -170,3 +170,19 @@ output "irsa_app_secrets_reader_role_arn" {
 output "irsa_app_secrets_reader_service_accounts" {
   value = module.irsa.app_secrets_reader_service_accounts
 }
+
+output "velero_backup_bucket_name" {
+  value = module.velero.bucket_name
+}
+
+output "velero_backup_bucket_arn" {
+  value = module.velero.bucket_arn
+}
+
+output "velero_iam_role_arn" {
+  value = module.velero.iam_role_arn
+}
+
+output "velero_service_account_subject" {
+  value = module.velero.service_account_subject
+}
