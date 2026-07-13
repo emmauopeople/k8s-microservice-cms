@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: church-app
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: church-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  source:
+    repoURL: https://github.com/emmauopeople/k8s-microservice-cms.git
+    targetRevision: main
+    path: helm/apps/church-app
+    helm:
+      releaseName: church-app
+      valueFiles:
+        - values.yaml
