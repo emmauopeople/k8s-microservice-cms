@@ -1,0 +1,23 @@
+{{- range $name, $service := .Values.services }}
+{{- if and $service.enabled $service.metricsPath }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    app.kubernetes.io/part-of: church-app
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+      app.kubernetes.io/part-of: church-app
+  endpoints:
+    - port: http
+      path: {{ $service.metricsPath }}
+      interval: 30s
+      scrapeTimeout: 10s
+---
+{{- end }}
+{{- end }}
