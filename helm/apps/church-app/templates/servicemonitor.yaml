@@ -1,3 +1,4 @@
+{{- if .Values.serviceMonitor.enabled }}
 {{- range $name, $service := .Values.services }}
 {{- if and $service.enabled $service.metricsPath }}
 apiVersion: monitoring.coreos.com/v1
@@ -19,5 +20,6 @@ spec:
       interval: 30s
       scrapeTimeout: 10s
 ---
+{{- end }}
 {{- end }}
 {{- end }}
