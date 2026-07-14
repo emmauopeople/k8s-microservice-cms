@@ -1,0 +1,87 @@
+# Local Kubernetes test override for the Docker/WSL CKA cluster.
+# This file is safe to commit because it contains no database URLs or passwords.
+# Create the referenced secrets locally with scripts/local-test/create-church-app-secrets.sh.
+
+namespace: church-prod
+
+imageRegistry: 302530480617.dkr.ecr.us-east-1.amazonaws.com
+imagePullPolicy: IfNotPresent
+imagePullSecrets:
+  - name: ecr-registry-secret
+
+# Keep local testing small.
+replicaCountOverride: 1
+
+# Start with port-forward testing. Enable local ingress later if needed.
+ingress:
+  enabled: false
+  className: nginx
+  certificateArn: ""
+  wafAclArn: ""
+  frontendHost: church.localtest.me
+  apiHost: api.church.localtest.me
+  scheme: internet-facing
+  targetType: ip
+
+frontendBuild:
+  # ECR frontend images must be built with matching API URLs.
+  # For local testing, the existing image may still use localhost fallback values.
+  VITE_AUTH_API_URL: http://localhost:4001
+  VITE_CHURCH_CORE_API_URL: http://localhost:4002
+  VITE_DOCUMENT_API_URL: http://localhost:4003
+  VITE_DEFAULT_LANGUAGE: fr
+
+services:
+  frontend:
+    replicas: 1
+    image:
+      tag: prod-placeholder
+
+  auth-service:
+    replicas: 1
+    image:
+      tag: prod-placeholder
+    env:
+      NODE_ENV: development
+      SERVICE_NAME: auth-service
+      LOG_LEVEL: info
+      PORT: "4001"
+      JWT_EXPIRES_IN: 1h
+
+  church-core-service:
+    replicas: 1
+    image:
+      tag: prod-placeholder
+    env:
+      NODE_ENV: development
+      SERVICE_NAME: church-core-service
+      LOG_LEVEL: info
+      PORT: "4002"
+
+  document-service:
+    replicas: 1
+    image:
+      tag: prod-placeholder
+    env:
+      NODE_ENV: development
+      SERVICE_NAME: document-service
+      LOG_LEVEL: info
+      PORT: "4003"
+      CHURCH_CORE_SERVICE_URL: http://church-core-service.church-prod.svc.cluster.local:4002
+      PARISH_NAME: Paroisse Catholique
+      DIOCESE_NAME: Diocese
+      PARISH_ADDRESS: Adresse de la paroisse
+      PARISH_PHONE: "4055511960"
+      PARISH_EMAIL: mbimunyui_gethub@yahoo.com
+      CHROMIUM_PATH: /usr/bin/chromium
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
+
+serviceAccounts:
+  frontend:
+    annotations: {}
+  auth-service:
+    annotations: {}
+  church-core-service:
+    annotations: {}
+  document-service:
+    annotations: {}
