@@ -2,6 +2,9 @@ namespace: church-prod
 
 imageRegistry: 302530480617.dkr.ecr.us-east-1.amazonaws.com
 imagePullPolicy: IfNotPresent
+imagePullSecrets: []
+
+replicaCountOverride: null
 
 ingress:
   enabled: true
