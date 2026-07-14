@@ -12,6 +12,11 @@ imagePullSecrets:
 # Keep local testing small.
 replicaCountOverride: 1
 
+# The local CKA cluster does not have Prometheus Operator CRDs by default.
+# Keep this disabled until kube-prometheus-stack is installed locally.
+serviceMonitor:
+  enabled: false
+
 # Start with port-forward testing. Enable local ingress later if needed.
 ingress:
   enabled: false
