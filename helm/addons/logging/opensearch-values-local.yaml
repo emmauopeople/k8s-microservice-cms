@@ -1,0 +1,46 @@
+# Local Kubernetes test values for OpenSearch.
+# This is intentionally small and non-persistent for the Docker/WSL CKA cluster.
+
+clusterName: opensearch
+fullnameOverride: opensearch
+
+singleNode: true
+replicas: 1
+
+roles:
+  - master
+  - ingest
+  - data
+  - remote_cluster_client
+
+persistence:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 768Mi
+  limits:
+    cpu: 1000m
+    memory: 1536Mi
+
+opensearchJavaOpts: "-Xms384m -Xmx384m"
+
+extraEnvs:
+  - name: DISABLE_INSTALL_DEMO_CONFIG
+    value: "true"
+  - name: DISABLE_SECURITY_PLUGIN
+    value: "true"
+
+config:
+  opensearch.yml: |
+    cluster.name: opensearch
+    network.host: 0.0.0.0
+    discovery.type: single-node
+    plugins.security.disabled: true
+
+service:
+  type: ClusterIP
+  httpPortName: http
+
+antiAffinity: soft
