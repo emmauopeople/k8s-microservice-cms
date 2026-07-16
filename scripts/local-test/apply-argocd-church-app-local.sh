@@ -8,20 +8,21 @@ REPO_URL="${REPO_URL:-https://github.com/emmauopeople/k8s-microservice-cms.git}"
 TARGET_REVISION="${TARGET_REVISION:-feature/platform-foundation}"
 CHART_PATH="${CHART_PATH:-helm/apps/church-app}"
 VALUES_FILE="${VALUES_FILE:-values-local-cka.yaml}"
+IMAGE_TAG_VALUES_FILE="${IMAGE_TAG_VALUES_FILE:-values-image-tags.yaml}"
 IMAGE_TAG="${IMAGE_TAG:-}"
-
-if [[ -z "${IMAGE_TAG}" ]]; then
-  echo "Missing IMAGE_TAG. Example:" >&2
-  echo "IMAGE_TAG=prod-abc1234 ./scripts/local-test/apply-argocd-church-app-local.sh" >&2
-  exit 1
-fi
 
 kubectl get namespace "${ARGOCD_NAMESPACE}" >/dev/null 2>&1 || {
   echo "Argo CD namespace '${ARGOCD_NAMESPACE}' does not exist. Run ./scripts/local-test/install-argocd-local.sh first." >&2
   exit 1
 }
 
-cat <<EOF | kubectl apply -f -
+if [[ -n "${IMAGE_TAG}" ]]; then
+  echo "Applying '${APP_NAME}' with temporary image tag override: ${IMAGE_TAG}"
+else
+  echo "Applying '${APP_NAME}' using GitOps image tag values file: ${IMAGE_TAG_VALUES_FILE}"
+fi
+
+cat <<EOF > /tmp/church-app-local-argocd.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -47,6 +48,11 @@ spec:
       releaseName: church-app
       valueFiles:
         - ${VALUES_FILE}
+        - ${IMAGE_TAG_VALUES_FILE}
+EOF
+
+if [[ -n "${IMAGE_TAG}" ]]; then
+  cat <<EOF >> /tmp/church-app-local-argocd.yaml
       parameters:
         - name: services.frontend.image.tag
           value: ${IMAGE_TAG}
@@ -57,6 +63,11 @@ spec:
         - name: services.document-service.image.tag
           value: ${IMAGE_TAG}
 EOF
+fi
+
+kubectl apply -f /tmp/church-app-local-argocd.yaml
+
+rm -f /tmp/church-app-local-argocd.yaml
 
 echo
 echo "Applied Argo CD application '${APP_NAME}'."
