@@ -1,0 +1,22 @@
+# Image tag overrides for GitOps deployments.
+# This file is intentionally small so CI/CD can update image tags without
+# modifying the main Helm values file.
+#
+# Updated by the church_app GitHub Actions workflow after images are pushed to ECR.
+
+services:
+  frontend:
+    image:
+      tag: prod-placeholder
+
+  auth-service:
+    image:
+      tag: prod-placeholder
+
+  church-core-service:
+    image:
+      tag: prod-placeholder
+
+  document-service:
+    image:
+      tag: prod-placeholder
