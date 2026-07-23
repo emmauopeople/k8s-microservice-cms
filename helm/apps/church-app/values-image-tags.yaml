@@ -4,16 +4,16 @@
 services:
   frontend:
     image:
-      tag: prod-a9bcb30
+      tag: prod-3594586
 
   auth-service:
     image:
-      tag: prod-a9bcb30
+      tag: prod-3594586
 
   church-core-service:
     image:
-      tag: prod-a9bcb30
+      tag: prod-3594586
 
   document-service:
     image:
-      tag: prod-a9bcb30
+      tag: prod-3594586
