@@ -46,47 +46,46 @@ create_database_if_missing() {
     echo "Database already exists: ${db}"
   else
     echo "Creating database: ${db}"
-    psql --dbname=postgres --command="CREATE DATABASE ${db};"
+    psql --dbname=postgres --set=app_db="${db}" --command='CREATE DATABASE :"app_db";'
   fi
 }
 
 upsert_user() {
   local user="$1"
   local password="$2"
-  psql --dbname=postgres --set=app_user="${user}" --set=app_password="${password}" <<'SQL'
-DO $$
-DECLARE
-  v_user text := :'app_user';
-  v_password text := :'app_password';
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = v_user) THEN
-    EXECUTE format('CREATE ROLE %I LOGIN PASSWORD %L', v_user, v_password);
-  ELSE
-    EXECUTE format('ALTER ROLE %I WITH LOGIN PASSWORD %L', v_user, v_password);
-  END IF;
-END
-$$;
-SQL
+
+  if psql --dbname=postgres --tuples-only --no-align --command="SELECT 1 FROM pg_roles WHERE rolname='${user}';" | grep -q '^1$'; then
+    echo "Updating role password: ${user}"
+    psql --dbname=postgres \
+      --set=app_user="${user}" \
+      --set=app_password="${password}" \
+      --command='ALTER ROLE :"app_user" WITH LOGIN PASSWORD :'\''app_password'\'';'
+  else
+    echo "Creating role: ${user}"
+    psql --dbname=postgres \
+      --set=app_user="${user}" \
+      --set=app_password="${password}" \
+      --command='CREATE ROLE :"app_user" LOGIN PASSWORD :'\''app_password'\'';'
+  fi
 }
 
 grant_database_privileges() {
   local db="$1"
   local user="$2"
 
-  psql --dbname=postgres --command="GRANT CONNECT ON DATABASE ${db} TO ${user};"
+  echo "Granting privileges on ${db} to ${user}"
+
+  psql --dbname=postgres \
+    --set=app_db="${db}" \
+    --set=app_user="${user}" \
+    --command='GRANT CONNECT ON DATABASE :"app_db" TO :"app_user";'
 
   psql --dbname="${db}" --set=app_user="${user}" <<'SQL'
-DO $$
-DECLARE
-  v_user text := :'app_user';
-BEGIN
-  EXECUTE format('GRANT USAGE, CREATE ON SCHEMA public TO %I', v_user);
-  EXECUTE format('GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO %I', v_user);
-  EXECUTE format('GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO %I', v_user);
-  EXECUTE format('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO %I', v_user);
-  EXECUTE format('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO %I', v_user);
-END
-$$;
+GRANT USAGE, CREATE ON SCHEMA public TO :"app_user";
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO :"app_user";
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO :"app_user";
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO :"app_user";
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO :"app_user";
 SQL
 }
 
