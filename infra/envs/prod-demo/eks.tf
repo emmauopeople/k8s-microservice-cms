@@ -11,8 +11,8 @@ module "eks" {
   endpoint_public_access  = var.eks_endpoint_public_access
   public_access_cidrs     = var.eks_public_access_cidrs
 
-  enabled_cluster_log_types   = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  cluster_log_retention_days  = 7
+  enabled_cluster_log_types  = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  cluster_log_retention_days = 7
 
   node_group_name     = "system"
   node_instance_types = var.eks_node_instance_types

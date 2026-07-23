@@ -6,7 +6,7 @@ The goal is to demonstrate production-style monitoring and logging while keeping
 
 ## Decision
 
-For the portfolio demo, run all observability components inside EKS:
+For the portfolio demo, I run all observability components inside EKS:
 
 - Prometheus
 - Grafana
@@ -70,9 +70,9 @@ logging
 
 ## Demo access pattern
 
-Initially, dashboards should not be public.
+Initially, dashboards is not public.
 
-Use port-forwarding during the portfolio demo:
+I use port forwarding to access dashboards:
 
 ```bash
 kubectl -n monitoring port-forward svc/monitoring-grafana 3000:80

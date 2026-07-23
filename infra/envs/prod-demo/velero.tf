@@ -9,9 +9,9 @@ module "velero" {
   namespace            = "velero"
   service_account_name = "velero"
 
-  force_destroy                        = true
-  backup_expiration_days               = 14
-  noncurrent_version_expiration_days   = 30
+  force_destroy                          = true
+  backup_expiration_days                 = 14
+  noncurrent_version_expiration_days     = 30
   abort_incomplete_multipart_upload_days = 7
 
   tags = local.common_tags

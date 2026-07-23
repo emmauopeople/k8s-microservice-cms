@@ -9,8 +9,8 @@ module "s3_documents" {
   cors_allowed_origins = var.document_bucket_cors_allowed_origins
   cors_allowed_methods = ["GET", "HEAD", "PUT", "POST"]
 
-  noncurrent_version_expiration_days        = 30
-  abort_incomplete_multipart_upload_days    = 7
+  noncurrent_version_expiration_days     = 30
+  abort_incomplete_multipart_upload_days = 7
 
   tags = local.common_tags
 }

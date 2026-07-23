@@ -20,8 +20,8 @@ module "irsa" {
   ebs_csi_namespace       = "kube-system"
   ebs_csi_service_account = "ebs-csi-controller-sa"
 
-  document_service_namespace       = "church-prod"
-  document_service_account         = "document-service"
+  document_service_namespace = "church-prod"
+  document_service_account   = "document-service"
 
   app_secrets_namespace = "church-prod"
   app_secrets_service_accounts = [
