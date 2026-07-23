@@ -1,0 +1,19 @@
+# Image tag overrides for GitOps deployments.
+# This file is updated by the church_app GitHub Actions workflow.
+
+services:
+  frontend:
+    image:
+      tag: prod-a9bcb30
+
+  auth-service:
+    image:
+      tag: prod-a9bcb30
+
+  church-core-service:
+    image:
+      tag: prod-a9bcb30
+
+  document-service:
+    image:
+      tag: prod-a9bcb30

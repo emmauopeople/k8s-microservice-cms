@@ -63,3 +63,145 @@ variable "single_nat_gateway" {
   type        = bool
   default     = true
 }
+
+variable "rds_instance_class" {
+  description = "RDS PostgreSQL instance class."
+  type        = string
+  default     = "db.t4g.micro"
+}
+
+variable "rds_allocated_storage" {
+  description = "Initial RDS storage in GiB."
+  type        = number
+  default     = 20
+}
+
+variable "rds_max_allocated_storage" {
+  description = "Maximum RDS storage in GiB for storage autoscaling."
+  type        = number
+  default     = 100
+}
+
+variable "rds_multi_az" {
+  description = "Enable Multi-AZ for RDS. False for demo cost control."
+  type        = bool
+  default     = false
+}
+
+variable "rds_backup_retention_period" {
+  description = "RDS automated backup retention in days."
+  type        = number
+  default     = 7
+}
+
+variable "rds_deletion_protection" {
+  description = "Enable RDS deletion protection. False for short-lived demo environments."
+  type        = bool
+  default     = false
+}
+
+variable "document_bucket_force_destroy" {
+  description = "Allow Terraform destroy to delete a non-empty document bucket. True for demo cleanup."
+  type        = bool
+  default     = true
+}
+
+variable "document_bucket_cors_allowed_origins" {
+  description = "Allowed browser origins for S3 document uploads and downloads."
+  type        = list(string)
+  default = [
+    "https://eks.gestionparoissiale.org",
+    "http://localhost:3000",
+    "http://localhost:5173"
+  ]
+}
+
+variable "dns_zone_name" {
+  description = "Delegated Route 53 hosted zone name for the EKS demo."
+  type        = string
+  default     = "eks.gestionparoissiale.org"
+}
+
+variable "acm_certificate_domain_name" {
+  description = "Primary ACM certificate domain name."
+  type        = string
+  default     = "eks.gestionparoissiale.org"
+}
+
+variable "acm_subject_alternative_names" {
+  description = "ACM certificate subject alternative names."
+  type        = list(string)
+  default     = ["*.eks.gestionparoissiale.org"]
+}
+
+variable "enable_acm_certificate_validation" {
+  description = "Set true only after Namecheap delegates eks.gestionparoissiale.org to the Route 53 name servers."
+  type        = bool
+  default     = false
+}
+
+variable "waf_rate_limit" {
+  description = "Maximum requests from a single IP address during a five-minute window."
+  type        = number
+  default     = 2000
+}
+
+variable "eks_kubernetes_version" {
+  description = "Kubernetes version for EKS. Null lets AWS use its current default supported version."
+  type        = string
+  default     = null
+}
+
+variable "eks_endpoint_public_access" {
+  description = "Enable public access to the EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "eks_endpoint_private_access" {
+  description = "Enable private access to the EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "eks_public_access_cidrs" {
+  description = "CIDR blocks allowed to access the public EKS API endpoint. Restrict this before a real production apply."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "eks_node_instance_types" {
+  description = "Instance types for the EKS managed node group."
+  type        = list(string)
+  default     = ["t3.medium"]
+}
+
+variable "eks_node_capacity_type" {
+  description = "Capacity type for EKS managed nodes."
+  type        = string
+  default     = "ON_DEMAND"
+}
+
+variable "eks_node_desired_size" {
+  description = "Desired number of EKS worker nodes."
+  type        = number
+  default     = 2
+}
+
+variable "eks_node_min_size" {
+  description = "Minimum number of EKS worker nodes."
+  type        = number
+  default     = 2
+}
+
+variable "eks_node_max_size" {
+  description = "Maximum number of EKS worker nodes."
+  type        = number
+  default     = 3
+}
+
+variable "eks_node_disk_size" {
+  description = "EKS worker node root disk size in GiB."
+  type        = number
+  default     = 30
+}

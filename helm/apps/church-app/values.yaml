@@ -1,0 +1,160 @@
+namespace: church-prod
+
+imageRegistry: 302530480617.dkr.ecr.us-east-1.amazonaws.com
+imagePullPolicy: IfNotPresent
+imagePullSecrets: []
+
+replicaCountOverride: null
+
+serviceMonitor:
+  enabled: true
+
+ingress:
+  enabled: true
+  className: alb
+  certificateArn: ""
+  wafAclArn: ""
+  frontendHost: eks.gestionparoissiale.org
+  apiHost: api.eks.gestionparoissiale.org
+  scheme: internet-facing
+  targetType: ip
+
+frontendBuild:
+  # These values must be passed as Docker build args when building the frontend image.
+  VITE_AUTH_API_URL: https://api.eks.gestionparoissiale.org
+  VITE_CHURCH_CORE_API_URL: https://api.eks.gestionparoissiale.org
+  VITE_DOCUMENT_API_URL: https://api.eks.gestionparoissiale.org
+  VITE_DEFAULT_LANGUAGE: fr
+
+services:
+  frontend:
+    enabled: true
+    image:
+      repository: church-frontend
+      tag: prod-placeholder
+    replicas: 2
+    port: 8080
+    serviceAccountName: frontend
+    healthPath: /health
+    metricsPath: null
+    env:
+      SERVICE_NAME: frontend
+    secretEnv: {}
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+
+  auth-service:
+    enabled: true
+    image:
+      repository: church-auth-service
+      tag: prod-placeholder
+    replicas: 2
+    port: 4001
+    serviceAccountName: auth-service
+    healthPath: /health
+    metricsPath: /metrics
+    env:
+      NODE_ENV: production
+      SERVICE_NAME: auth-service
+      LOG_LEVEL: info
+      PORT: "4001"
+      JWT_EXPIRES_IN: 1h
+    secretEnv:
+      DATABASE_URL:
+        secretName: auth-service-db
+        key: DATABASE_URL
+      JWT_SECRET:
+        secretName: auth-service-secret
+        key: JWT_SECRET
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  church-core-service:
+    enabled: true
+    image:
+      repository: church-core-service
+      tag: prod-placeholder
+    replicas: 2
+    port: 4002
+    serviceAccountName: church-core-service
+    healthPath: /health
+    metricsPath: /metrics
+    env:
+      NODE_ENV: production
+      SERVICE_NAME: church-core-service
+      LOG_LEVEL: info
+      PORT: "4002"
+    secretEnv:
+      DATABASE_URL:
+        secretName: church-core-service-db
+        key: DATABASE_URL
+      JWT_SECRET:
+        secretName: church-core-service-secret
+        key: JWT_SECRET
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  document-service:
+    enabled: true
+    image:
+      repository: church-document-core-service
+      tag: prod-placeholder
+    replicas: 2
+    port: 4003
+    serviceAccountName: document-service
+    healthPath: /health
+    metricsPath: /metrics
+    env:
+      NODE_ENV: production
+      SERVICE_NAME: document-service
+      LOG_LEVEL: info
+      PORT: "4003"
+      CHURCH_CORE_SERVICE_URL: http://church-core-service.church-prod.svc.cluster.local:4002
+      PARISH_NAME: Paroisse Catholique
+      DIOCESE_NAME: Diocese
+      PARISH_ADDRESS: ""
+      PARISH_PHONE: ""
+      PARISH_EMAIL: ""
+      CHROMIUM_PATH: /usr/bin/chromium
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
+    secretEnv:
+      DATABASE_URL:
+        secretName: document-service-db
+        key: DATABASE_URL
+      JWT_SECRET:
+        secretName: document-service-secret
+        key: JWT_SECRET
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+serviceAccounts:
+  frontend:
+    annotations: {}
+  auth-service:
+    annotations: {}
+  church-core-service:
+    annotations: {}
+  document-service:
+    annotations:
+      # Fill from terraform output: irsa_document_service_s3_role_arn
+      eks.amazonaws.com/role-arn: ""

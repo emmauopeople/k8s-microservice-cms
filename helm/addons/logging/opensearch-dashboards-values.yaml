@@ -1,0 +1,29 @@
+# Portfolio demo values for OpenSearch Dashboards.
+# Access by kubectl port-forward during demo day, or enable ingress later.
+
+fullnameOverride: opensearch-dashboards
+
+opensearchHosts: "http://opensearch.logging.svc.cluster.local:9200"
+
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+service:
+  type: ClusterIP
+  port: 5601
+
+ingress:
+  enabled: false
+
+config:
+  opensearch_dashboards.yml: |
+    server.host: 0.0.0.0
+    opensearch.hosts: ["http://opensearch.logging.svc.cluster.local:9200"]
+    opensearch_security.enabled: false

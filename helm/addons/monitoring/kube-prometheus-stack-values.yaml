@@ -1,0 +1,117 @@
+# Portfolio demo values for kube-prometheus-stack.
+# Deploys Prometheus, Grafana, Alertmanager, kube-state-metrics, node-exporter,
+# and default Kubernetes dashboards/rules inside the EKS cluster.
+
+fullnameOverride: kube-prometheus-stack
+
+prometheusOperator:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+grafana:
+  enabled: true
+  namespaceOverride: monitoring
+
+  # Do not commit real admin passwords to Git.
+  # Create this secret during apply day before syncing the monitoring app:
+  # kubectl -n monitoring create secret generic grafana-admin-credentials \
+  #   --from-literal=admin-user=admin \
+  #   --from-literal=admin-password='<strong-password>'
+  admin:
+    existingSecret: grafana-admin-credentials
+    userKey: admin-user
+    passwordKey: admin-password
+
+  persistence:
+    enabled: true
+    type: pvc
+    storageClassName: gp3
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: false
+
+  grafana.ini:
+    server:
+      root_url: https://grafana.eks.gestionparoissiale.org
+    analytics:
+      check_for_updates: false
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    replicas: 1
+    retention: 120h
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2Gi
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    replicas: 1
+    retention: 3d
+    retentionSize: 8GB
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+
+  service:
+    type: ClusterIP
+
+thanosRuler:
+  enabled: false
+
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi

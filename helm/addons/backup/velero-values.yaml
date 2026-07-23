@@ -1,0 +1,73 @@
+# Portfolio demo values for Velero.
+# Backs up Kubernetes resources to the dedicated S3 backup bucket.
+
+configuration:
+  backupStorageLocation:
+    - name: default
+      provider: aws
+      bucket: church-prod-demo-velero-backups-302530480617-us-east-1
+      default: true
+      config:
+        region: us-east-1
+
+  volumeSnapshotLocation:
+    - name: default
+      provider: aws
+      config:
+        region: us-east-1
+
+credentials:
+  useSecret: false
+
+serviceAccount:
+  server:
+    create: true
+    name: velero
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::302530480617:role/church-prod-demo-velero-backups-role
+
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.10.1
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+snapshotsEnabled: true
+
+deployNodeAgent: true
+
+nodeAgent:
+  podVolumePath: /var/lib/kubelet/pods
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+schedules:
+  daily-cluster-backup:
+    disabled: false
+    schedule: "0 2 * * *"
+    useOwnerReferencesInBackup: false
+    template:
+      ttl: "168h"
+      includedNamespaces:
+        - church-prod
+        - monitoring
+        - logging
+        - argocd
+      excludedResources:
+        - events
+        - events.events.k8s.io
