@@ -14,6 +14,7 @@ data "aws_iam_policy_document" "backup_uploader" {
     effect = "Allow"
     actions = [
       "s3:AbortMultipartUpload",
+      "s3:ListMultipartUploadParts",
       "s3:PutObject"
     ]
     resources = ["${aws_s3_bucket.migration.arn}/*"]
@@ -23,6 +24,7 @@ data "aws_iam_policy_document" "backup_uploader" {
     sid    = "EncryptMigrationBackups"
     effect = "Allow"
     actions = [
+      "kms:Decrypt",
       "kms:DescribeKey",
       "kms:Encrypt",
       "kms:GenerateDataKey"
