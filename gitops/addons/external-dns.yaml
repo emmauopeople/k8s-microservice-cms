@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  source:
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    chart: external-dns
+    targetRevision: "1.21.1"
+    helm:
+      releaseName: external-dns
+      values: |
+        provider:
+          name: aws
+
+        policy: upsert-only
+        registry: txt
+        txtOwnerId: church-prod-demo-eks
+
+        sources:
+          - ingress
+          - service
+
+        domainFilters:
+          - eks.gestionparoissiale.org
+
+        extraArgs:
+          - --aws-zone-type=public
+
+        serviceAccount:
+          create: true
+          name: external-dns
+          annotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::302530480617:role/church-prod-demo-eks-external-dns
+
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
