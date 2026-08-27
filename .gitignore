@@ -9,6 +9,7 @@ crash.*.log
 override.tf
 override.tf.json
 *_override.tf
+override.tf.json
 *_override.tf.json
 
 # Secrets
@@ -33,7 +34,11 @@ dist/
 build/
 coverage/
 
-# Local generated files
+# Local generated files and database backups
 tmp/
 backups/
+db_backups/
+backups.zip
 *.backup
+*.dump
+*.sql.gz
