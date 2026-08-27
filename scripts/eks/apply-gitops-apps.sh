@@ -19,6 +19,7 @@ apps=(
   "gitops/addons/storageclass-gp3.yaml"
   "gitops/addons/aws-load-balancer-controller.yaml"
   "gitops/addons/external-dns.yaml"
+  "gitops/addons/logging-network-policies.yaml"
   "gitops/addons/monitoring.yaml"
   "gitops/addons/opensearch.yaml"
   "gitops/addons/opensearch-dashboards.yaml"
@@ -45,6 +46,7 @@ kubectl -n "${ARGOCD_NAMESPACE}" get applications.argoproj.io \
   storageclass-gp3 \
   aws-load-balancer-controller \
   external-dns \
+  logging-network-policies \
   monitoring \
   opensearch \
   opensearch-dashboards \
