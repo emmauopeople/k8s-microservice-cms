@@ -6,6 +6,10 @@ imagePullSecrets: []
 
 replicaCountOverride: null
 
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
 serviceMonitor:
   enabled: true
 
@@ -37,6 +41,14 @@ services:
     serviceAccountName: frontend
     healthPath: /health
     metricsPath: null
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      runAsUser: 101
+      runAsGroup: 101
+      capabilities:
+        drop:
+          - ALL
     env:
       SERVICE_NAME: frontend
     secretEnv: {}
@@ -58,6 +70,14 @@ services:
     serviceAccountName: auth-service
     healthPath: /health
     metricsPath: /metrics
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      capabilities:
+        drop:
+          - ALL
     env:
       NODE_ENV: production
       SERVICE_NAME: auth-service
@@ -89,6 +109,14 @@ services:
     serviceAccountName: church-core-service
     healthPath: /health
     metricsPath: /metrics
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      capabilities:
+        drop:
+          - ALL
     env:
       NODE_ENV: production
       SERVICE_NAME: church-core-service
@@ -119,6 +147,14 @@ services:
     serviceAccountName: document-service
     healthPath: /health
     metricsPath: /metrics
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      capabilities:
+        drop:
+          - ALL
     env:
       NODE_ENV: production
       SERVICE_NAME: document-service
