@@ -16,17 +16,9 @@ set -euo pipefail
 #   BACKUP_S3_URI    Optional S3 URI, for example s3://my-bucket/path
 #   DATABASES        Space-separated database list. Defaults to the church app databases.
 
-required_var() {
-  local name="$1"
-  if [[ -z "${!name:-}" ]]; then
-    echo "Missing required environment variable: ${name}" >&2
-    exit 1
-  fi
-}
-
-required_var OVH_PGHOST
-required_var OVH_PGUSER
-required_var PGPASSWORD
+: "${OVH_PGHOST:?Missing required environment variable: OVH_PGHOST}"
+: "${OVH_PGUSER:?Missing required environment variable: OVH_PGUSER}"
+: "${PGPASSWORD:?Missing required environment variable: PGPASSWORD}"
 
 OVH_PGPORT="${OVH_PGPORT:-5432}"
 OVH_PGSSLMODE="${OVH_PGSSLMODE:-prefer}"
