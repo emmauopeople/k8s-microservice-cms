@@ -10,8 +10,8 @@ set -euo pipefail
 #   RDS_PGUSER                 RDS master/admin user, for example cms_admin
 #   PGPASSWORD                 RDS master/admin password
 #   AUTH_DB_PASSWORD           Password for auth_db_user
-#   CHURCH_CORE_DB_PASSWORD    Password for church_core_db_user
-#   DOCUMENT_DB_PASSWORD       Password for document_core_db_user
+#   CHURCH_CORE_DB_PASSWORD    Password for church_db_user
+#   DOCUMENT_DB_PASSWORD       Password for document_db_user
 #
 # Optional environment variables:
 #   RDS_PGPORT                 Defaults to 5432
@@ -86,11 +86,11 @@ create_database_if_missing church_core_db
 create_database_if_missing document_core_db
 
 upsert_user auth_db_user "${AUTH_DB_PASSWORD}"
-upsert_user church_core_db_user "${CHURCH_CORE_DB_PASSWORD}"
-upsert_user document_core_db_user "${DOCUMENT_DB_PASSWORD}"
+upsert_user church_db_user "${CHURCH_CORE_DB_PASSWORD}"
+upsert_user document_db_user "${DOCUMENT_DB_PASSWORD}"
 
 grant_database_privileges auth_db auth_db_user
-grant_database_privileges church_core_db church_core_db_user
-grant_database_privileges document_core_db document_core_db_user
+grant_database_privileges church_core_db church_db_user
+grant_database_privileges document_core_db document_db_user
 
 echo "RDS application databases and users are ready."
