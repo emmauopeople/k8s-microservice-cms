@@ -1,0 +1,12 @@
+# AWS resource values generated after Terraform apply.
+# Run scripts/eks/render-aws-generated-values.sh and commit the resulting
+# non-secret ARNs before syncing the church-app Argo CD application.
+
+ingress:
+  certificateArn: ""
+  wafAclArn: ""
+
+serviceAccounts:
+  document-service:
+    annotations:
+      eks.amazonaws.com/role-arn: ""
