@@ -23,4 +23,5 @@ spec:
       releaseName: church-app
       valueFiles:
         - values.yaml
+        - values-aws-generated.yaml
         - values-image-tags.yaml
