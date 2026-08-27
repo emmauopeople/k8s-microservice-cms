@@ -64,9 +64,17 @@ resource "aws_db_instance" "this" {
   copy_tags_to_snapshot      = true
   deletion_protection        = var.deletion_protection
   skip_final_snapshot        = var.skip_final_snapshot
+  final_snapshot_identifier  = var.skip_final_snapshot ? null : var.final_snapshot_identifier
   apply_immediately          = var.apply_immediately
 
   performance_insights_enabled = var.performance_insights_enabled
+
+  lifecycle {
+    precondition {
+      condition     = var.skip_final_snapshot || (var.final_snapshot_identifier != null && length(trimspace(var.final_snapshot_identifier)) > 0)
+      error_message = "final_snapshot_identifier must be set when skip_final_snapshot is false."
+    }
+  }
 
   tags = merge(local.common_tags, {
     Name = var.name
