@@ -130,8 +130,9 @@ resource "aws_eks_node_group" "this" {
 resource "aws_eks_addon" "this" {
   for_each = var.cluster_addons
 
-  cluster_name = aws_eks_cluster.this.name
-  addon_name   = each.value
+  cluster_name         = aws_eks_cluster.this.name
+  addon_name           = each.value
+  configuration_values = lookup(var.cluster_addon_configuration_values, each.value, null)
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
