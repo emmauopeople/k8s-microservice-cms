@@ -102,6 +102,12 @@ variable "cluster_addons" {
   default     = ["vpc-cni", "kube-proxy", "coredns"]
 }
 
+variable "cluster_addon_configuration_values" {
+  description = "Optional JSON configuration values keyed by EKS managed add-on name."
+  type        = map(string)
+  default     = {}
+}
+
 variable "tags" {
   description = "Common tags applied to resources."
   type        = map(string)
