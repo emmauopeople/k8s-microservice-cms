@@ -17,18 +17,10 @@ set -euo pipefail
 #   DATABASES         Space-separated database list. Defaults to church app databases.
 #   RESTORE_CLEAN     Defaults to true. Uses --clean --if-exists before restore.
 
-required_var() {
-  local name="$1"
-  if [[ -z "${!name:-}" ]]; then
-    echo "Missing required environment variable: ${name}" >&2
-    exit 1
-  fi
-}
-
-required_var RDS_PGHOST
-required_var RDS_PGUSER
-required_var PGPASSWORD
-required_var BACKUP_SET_DIR
+: "${RDS_PGHOST:?Missing required environment variable: RDS_PGHOST}"
+: "${RDS_PGUSER:?Missing required environment variable: RDS_PGUSER}"
+: "${PGPASSWORD:?Missing required environment variable: PGPASSWORD}"
+: "${BACKUP_SET_DIR:?Missing required environment variable: BACKUP_SET_DIR}"
 
 RDS_PGPORT="${RDS_PGPORT:-5432}"
 RDS_PGSSLMODE="${RDS_PGSSLMODE:-require}"
@@ -82,7 +74,6 @@ for db in ${DATABASES}; do
       --dbname="${db}" \
       "${dump_file}"
   fi
-
 done
 
 echo "Restore completed for: ${DATABASES}"
