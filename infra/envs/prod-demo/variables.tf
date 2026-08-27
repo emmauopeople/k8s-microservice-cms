@@ -59,15 +59,21 @@ variable "enable_nat_gateway" {
 }
 
 variable "single_nat_gateway" {
-  description = "Use one NAT Gateway for demo cost control. Use false for production-style one NAT Gateway per AZ."
+  description = "Use one NAT Gateway for initial cost control. Set false for one NAT Gateway per AZ."
   type        = bool
   default     = true
+}
+
+variable "rds_engine_version" {
+  description = "Pinned PostgreSQL version for migration compatibility with the current PostgreSQL 16 source."
+  type        = string
+  default     = "16.14"
 }
 
 variable "rds_instance_class" {
   description = "RDS PostgreSQL instance class."
   type        = string
-  default     = "db.t4g.micro"
+  default     = "db.t4g.small"
 }
 
 variable "rds_allocated_storage" {
@@ -83,7 +89,7 @@ variable "rds_max_allocated_storage" {
 }
 
 variable "rds_multi_az" {
-  description = "Enable Multi-AZ for RDS. False for demo cost control."
+  description = "Enable Multi-AZ for RDS. Enable for higher database availability when budget permits."
   type        = bool
   default     = false
 }
@@ -91,19 +97,31 @@ variable "rds_multi_az" {
 variable "rds_backup_retention_period" {
   description = "RDS automated backup retention in days."
   type        = number
-  default     = 7
+  default     = 14
 }
 
 variable "rds_deletion_protection" {
-  description = "Enable RDS deletion protection. False for short-lived demo environments."
+  description = "Enable RDS deletion protection."
+  type        = bool
+  default     = true
+}
+
+variable "rds_skip_final_snapshot" {
+  description = "Skip a final RDS snapshot during destroy. Keep false for live data."
   type        = bool
   default     = false
 }
 
+variable "rds_final_snapshot_identifier" {
+  description = "Final RDS snapshot identifier used during an intentional destroy."
+  type        = string
+  default     = "church-prod-demo-postgres-final"
+}
+
 variable "document_bucket_force_destroy" {
-  description = "Allow Terraform destroy to delete a non-empty document bucket. True for demo cleanup."
+  description = "Allow Terraform destroy to delete a non-empty document bucket. Keep false for live data."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "document_bucket_cors_allowed_origins" {
@@ -117,7 +135,7 @@ variable "document_bucket_cors_allowed_origins" {
 }
 
 variable "dns_zone_name" {
-  description = "Delegated Route 53 hosted zone name for the EKS demo."
+  description = "Delegated Route 53 hosted zone name for the EKS environment."
   type        = string
   default     = "eks.gestionparoissiale.org"
 }
@@ -147,9 +165,9 @@ variable "waf_rate_limit" {
 }
 
 variable "eks_kubernetes_version" {
-  description = "Kubernetes version for EKS. Null lets AWS use its current default supported version."
+  description = "Pinned Kubernetes minor version for the EKS cluster."
   type        = string
-  default     = null
+  default     = "1.36"
 }
 
 variable "eks_endpoint_public_access" {
@@ -165,9 +183,13 @@ variable "eks_endpoint_private_access" {
 }
 
 variable "eks_public_access_cidrs" {
-  description = "CIDR blocks allowed to access the public EKS API endpoint. Restrict this before a real production apply."
+  description = "Administrative CIDR blocks allowed to access the public EKS API endpoint. Supply your current public IP as /32."
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+
+  validation {
+    condition     = length(var.eks_public_access_cidrs) > 0 && !contains(var.eks_public_access_cidrs, "0.0.0.0/0")
+    error_message = "eks_public_access_cidrs must contain at least one restricted CIDR and must not include 0.0.0.0/0."
+  }
 }
 
 variable "eks_node_instance_types" {
@@ -185,7 +207,7 @@ variable "eks_node_capacity_type" {
 variable "eks_node_desired_size" {
   description = "Desired number of EKS worker nodes."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "eks_node_min_size" {
@@ -197,7 +219,7 @@ variable "eks_node_min_size" {
 variable "eks_node_max_size" {
   description = "Maximum number of EKS worker nodes."
   type        = number
-  default     = 3
+  default     = 5
 }
 
 variable "eks_node_disk_size" {
