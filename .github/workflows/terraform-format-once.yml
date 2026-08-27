@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   format:
-    if: ${{ !startsWith(github.event.head_commit.message, 'style: terraform fmt') }}
+    if: "${{ ! startsWith(github.event.head_commit.message, 'style: terraform fmt') }}"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
