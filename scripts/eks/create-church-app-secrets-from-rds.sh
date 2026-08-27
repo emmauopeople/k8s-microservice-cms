@@ -20,19 +20,11 @@ set -euo pipefail
 #   CHURCH_CORE_DB_USER       Defaults to church_core_db_user
 #   DOCUMENT_DB_USER          Defaults to document_core_db_user
 
-required_var() {
-  local name="$1"
-  if [[ -z "${!name:-}" ]]; then
-    echo "Missing required environment variable: ${name}" >&2
-    exit 1
-  fi
-}
-
-required_var RDS_HOST
-required_var AUTH_DB_PASSWORD
-required_var CHURCH_CORE_DB_PASSWORD
-required_var DOCUMENT_DB_PASSWORD
-required_var JWT_SECRET_VALUE
+: "${RDS_HOST:?Missing required environment variable: RDS_HOST}"
+: "${AUTH_DB_PASSWORD:?Missing required environment variable: AUTH_DB_PASSWORD}"
+: "${CHURCH_CORE_DB_PASSWORD:?Missing required environment variable: CHURCH_CORE_DB_PASSWORD}"
+: "${DOCUMENT_DB_PASSWORD:?Missing required environment variable: DOCUMENT_DB_PASSWORD}"
+: "${JWT_SECRET_VALUE:?Missing required environment variable: JWT_SECRET_VALUE}"
 
 NAMESPACE="${NAMESPACE:-church-prod}"
 RDS_PORT="${RDS_PORT:-5432}"
