@@ -1,0 +1,42 @@
+name: Terraform Format Once
+
+on:
+  push:
+    branches:
+      - eks-production-readiness
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: ${{ !startsWith(github.event.head_commit.message, 'style: terraform fmt') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: eks-production-readiness
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+
+      - name: Format Terraform
+        run: terraform fmt -recursive
+
+      - name: Commit formatting changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- '*.tf' '*.tfvars' '*.tfvars.example'; then
+            echo "No Terraform formatting changes required."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.tf' '*.tfvars' '*.tfvars.example'
+          git commit -m "style: terraform fmt"
+          git push origin HEAD:eks-production-readiness
