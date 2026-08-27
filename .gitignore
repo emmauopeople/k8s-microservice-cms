@@ -9,7 +9,6 @@ crash.*.log
 override.tf
 override.tf.json
 *_override.tf
-override.tf.json
 *_override.tf.json
 
 # Secrets
