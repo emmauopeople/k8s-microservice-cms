@@ -8,8 +8,8 @@ set -euo pipefail
 # Required environment variables:
 #   RDS_HOST                  RDS hostname without port
 #   AUTH_DB_PASSWORD          Password for auth_db_user
-#   CHURCH_CORE_DB_PASSWORD   Password for church_core_db_user
-#   DOCUMENT_DB_PASSWORD      Password for document_core_db_user
+#   CHURCH_CORE_DB_PASSWORD   Password for church_db_user
+#   DOCUMENT_DB_PASSWORD      Password for document_db_user
 #   JWT_SECRET_VALUE          Shared JWT secret used by the backend services
 #
 # Optional environment variables:
@@ -17,8 +17,8 @@ set -euo pipefail
 #   NAMESPACE                 Defaults to church-prod
 #   PGSSLMODE                 Defaults to require
 #   AUTH_DB_USER              Defaults to auth_db_user
-#   CHURCH_CORE_DB_USER       Defaults to church_core_db_user
-#   DOCUMENT_DB_USER          Defaults to document_core_db_user
+#   CHURCH_CORE_DB_USER       Defaults to church_db_user
+#   DOCUMENT_DB_USER          Defaults to document_db_user
 
 : "${RDS_HOST:?Missing required environment variable: RDS_HOST}"
 : "${AUTH_DB_PASSWORD:?Missing required environment variable: AUTH_DB_PASSWORD}"
@@ -30,8 +30,8 @@ NAMESPACE="${NAMESPACE:-church-prod}"
 RDS_PORT="${RDS_PORT:-5432}"
 PGSSLMODE="${PGSSLMODE:-require}"
 AUTH_DB_USER="${AUTH_DB_USER:-auth_db_user}"
-CHURCH_CORE_DB_USER="${CHURCH_CORE_DB_USER:-church_core_db_user}"
-DOCUMENT_DB_USER="${DOCUMENT_DB_USER:-document_core_db_user}"
+CHURCH_CORE_DB_USER="${CHURCH_CORE_DB_USER:-church_db_user}"
+DOCUMENT_DB_USER="${DOCUMENT_DB_USER:-document_db_user}"
 
 AUTH_DATABASE_URL="postgresql://${AUTH_DB_USER}:${AUTH_DB_PASSWORD}@${RDS_HOST}:${RDS_PORT}/auth_db?sslmode=${PGSSLMODE}"
 CHURCH_CORE_DATABASE_URL="postgresql://${CHURCH_CORE_DB_USER}:${CHURCH_CORE_DB_PASSWORD}@${RDS_HOST}:${RDS_PORT}/church_core_db?sslmode=${PGSSLMODE}"
