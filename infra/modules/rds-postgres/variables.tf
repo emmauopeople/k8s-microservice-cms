@@ -25,9 +25,8 @@ variable "database_port" {
 }
 
 variable "engine_version" {
-  description = "PostgreSQL engine version. Null lets AWS choose the default supported version."
+  description = "PostgreSQL engine version."
   type        = string
-  default     = null
 }
 
 variable "instance_class" {
@@ -73,7 +72,7 @@ variable "master_username" {
 }
 
 variable "multi_az" {
-  description = "Whether to enable Multi-AZ. False for demo cost control."
+  description = "Whether to enable Multi-AZ."
   type        = bool
   default     = false
 }
@@ -85,15 +84,21 @@ variable "backup_retention_period" {
 }
 
 variable "deletion_protection" {
-  description = "Whether to enable deletion protection. False for short-lived demo environments."
+  description = "Whether to enable RDS deletion protection."
+  type        = bool
+  default     = true
+}
+
+variable "skip_final_snapshot" {
+  description = "Whether to skip a final snapshot during destroy. Keep false for production data."
   type        = bool
   default     = false
 }
 
-variable "skip_final_snapshot" {
-  description = "Whether to skip a final snapshot during destroy. True for short-lived demo environments."
-  type        = bool
-  default     = true
+variable "final_snapshot_identifier" {
+  description = "Final snapshot identifier used when skip_final_snapshot is false."
+  type        = string
+  default     = null
 }
 
 variable "apply_immediately" {
