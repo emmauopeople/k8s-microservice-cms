@@ -8,6 +8,7 @@ module "rds_postgres" {
   allowed_cidr_blocks = var.private_app_subnet_cidrs
   database_port       = 5432
 
+  engine_version        = var.rds_engine_version
   instance_class        = var.rds_instance_class
   allocated_storage     = var.rds_allocated_storage
   max_allocated_storage = var.rds_max_allocated_storage
@@ -23,8 +24,9 @@ module "rds_postgres" {
   backup_retention_period = var.rds_backup_retention_period
   deletion_protection     = var.rds_deletion_protection
 
-  skip_final_snapshot = true
-  apply_immediately   = false
+  skip_final_snapshot       = var.rds_skip_final_snapshot
+  final_snapshot_identifier = var.rds_final_snapshot_identifier
+  apply_immediately         = false
 
   tags = local.common_tags
 }
