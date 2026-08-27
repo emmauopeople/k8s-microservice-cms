@@ -17,20 +17,12 @@ set -euo pipefail
 #   RDS_PGPORT                 Defaults to 5432
 #   RDS_PGSSLMODE              Defaults to require
 
-required_var() {
-  local name="$1"
-  if [[ -z "${!name:-}" ]]; then
-    echo "Missing required environment variable: ${name}" >&2
-    exit 1
-  fi
-}
-
-required_var RDS_PGHOST
-required_var RDS_PGUSER
-required_var PGPASSWORD
-required_var AUTH_DB_PASSWORD
-required_var CHURCH_CORE_DB_PASSWORD
-required_var DOCUMENT_DB_PASSWORD
+: "${RDS_PGHOST:?Missing required environment variable: RDS_PGHOST}"
+: "${RDS_PGUSER:?Missing required environment variable: RDS_PGUSER}"
+: "${PGPASSWORD:?Missing required environment variable: PGPASSWORD}"
+: "${AUTH_DB_PASSWORD:?Missing required environment variable: AUTH_DB_PASSWORD}"
+: "${CHURCH_CORE_DB_PASSWORD:?Missing required environment variable: CHURCH_CORE_DB_PASSWORD}"
+: "${DOCUMENT_DB_PASSWORD:?Missing required environment variable: DOCUMENT_DB_PASSWORD}"
 
 RDS_PGPORT="${RDS_PGPORT:-5432}"
 RDS_PGSSLMODE="${RDS_PGSSLMODE:-require}"
