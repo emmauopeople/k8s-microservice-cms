@@ -31,7 +31,7 @@ jobs:
           terraform_version: 1.10.5
 
       - name: Terraform format check
-        run: terraform fmt -check -recursive
+        run: terraform fmt -check -diff -recursive
 
       - name: Terraform init without remote backend
         working-directory: infra/envs/prod-demo
