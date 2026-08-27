@@ -1,0 +1,24 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+{{- range $name, $service := .Values.services }}
+{{- if $service.enabled }}
+{{- $replicas := $.Values.replicaCountOverride | default $service.replicas }}
+{{- if gt (int $replicas) 1 }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    app.kubernetes.io/part-of: church-app
+spec:
+  minAvailable: {{ $.Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+      app.kubernetes.io/part-of: church-app
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
