@@ -30,13 +30,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- '*.tf' '*.tfvars' '*.tfvars.example'; then
+          if git diff --quiet -- infra/; then
             echo "No Terraform formatting changes required."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- '*.tf' '*.tfvars' '*.tfvars.example'
+          git add infra/
           git commit -m "style: terraform fmt"
           git push origin HEAD:eks-production-readiness
