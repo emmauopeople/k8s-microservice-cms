@@ -31,10 +31,10 @@ resource "aws_s3_bucket" "migration" {
   force_destroy = var.force_destroy
 
   tags = merge(local.common_tags, {
-    Name        = local.bucket_name
-    DataClass   = "confidential"
-    Purpose     = "ovh-to-rds-migration"
-    Temporary   = "true"
+    Name      = local.bucket_name
+    DataClass = "confidential"
+    Purpose   = "ovh-to-rds-migration"
+    Temporary = "true"
   })
 }
 

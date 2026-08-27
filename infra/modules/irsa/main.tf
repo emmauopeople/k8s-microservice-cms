@@ -67,8 +67,8 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = ["iam:CreateServiceLinkedRole"]
+        Effect   = "Allow"
+        Action   = ["iam:CreateServiceLinkedRole"]
         Resource = "*"
         Condition = {
           StringEquals = {
@@ -131,13 +131,13 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = ["ec2:CreateSecurityGroup"]
+        Effect   = "Allow"
+        Action   = ["ec2:CreateSecurityGroup"]
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = ["ec2:CreateTags"]
+        Effect   = "Allow"
+        Action   = ["ec2:CreateTags"]
         Resource = "arn:aws:ec2:*:*:security-group/*"
         Condition = {
           StringEquals = {
@@ -291,8 +291,8 @@ resource "aws_iam_policy" "external_dns" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = ["route53:ChangeResourceRecordSets"]
+        Effect   = "Allow"
+        Action   = ["route53:ChangeResourceRecordSets"]
         Resource = "arn:aws:route53:::hostedzone/${var.route53_zone_id}"
       },
       {

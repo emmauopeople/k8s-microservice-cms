@@ -17,15 +17,15 @@ module "db_migration" {
   private_route_table_ids = module.vpc.private_app_route_table_ids
 
   rds_security_group_id = module.rds_postgres.db_security_group_id
-  database_port          = 5432
+  database_port         = 5432
 
   create_instance  = var.enable_db_migration_host
   instance_type    = var.db_migration_instance_type
   root_volume_size = var.db_migration_root_volume_size
 
-  backup_expiration_days            = var.db_migration_backup_expiration_days
+  backup_expiration_days             = var.db_migration_backup_expiration_days
   noncurrent_version_expiration_days = var.db_migration_noncurrent_expiration_days
-  force_destroy                     = var.db_migration_bucket_force_destroy
+  force_destroy                      = var.db_migration_bucket_force_destroy
 
   tags = local.common_tags
 }

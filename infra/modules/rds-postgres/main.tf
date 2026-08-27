@@ -58,7 +58,7 @@ resource "aws_db_instance" "this" {
   vpc_security_group_ids = [aws_security_group.this.id]
   publicly_accessible    = false
 
-  multi_az                    = var.multi_az
+  multi_az                   = var.multi_az
   backup_retention_period    = var.backup_retention_period
   auto_minor_version_upgrade = true
   copy_tags_to_snapshot      = true
