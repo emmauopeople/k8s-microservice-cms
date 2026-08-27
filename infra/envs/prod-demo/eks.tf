@@ -23,6 +23,11 @@ module "eks" {
   node_disk_size      = var.eks_node_disk_size
 
   cluster_addons = ["vpc-cni", "kube-proxy", "coredns"]
+  cluster_addon_configuration_values = {
+    vpc-cni = jsonencode({
+      enableNetworkPolicy = "true"
+    })
+  }
 
   tags = local.common_tags
 }
