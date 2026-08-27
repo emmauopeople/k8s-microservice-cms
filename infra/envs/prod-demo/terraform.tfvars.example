@@ -1,0 +1,25 @@
+# Copy this file to terraform.tfvars before planning/applying.
+# terraform.tfvars is ignored by Git and must never contain committed secrets.
+
+# REQUIRED: replace with the current administrator public IPv4 address in /32 form.
+eks_public_access_cidrs = ["203.0.113.10/32"]
+
+# Initial production-style capacity. Review estimated AWS cost before apply.
+eks_node_instance_types = ["t3.medium"]
+eks_node_desired_size   = 3
+eks_node_min_size       = 2
+eks_node_max_size       = 5
+
+# Database settings. Multi-AZ is intentionally left false initially for cost control;
+# set true before apply if database high availability is required from day one.
+rds_engine_version          = "16.14"
+rds_instance_class          = "db.t4g.small"
+rds_multi_az                = false
+rds_backup_retention_period = 14
+rds_deletion_protection     = true
+rds_skip_final_snapshot     = false
+rds_final_snapshot_identifier = "church-prod-demo-postgres-final"
+
+# DNS certificate validation remains false until the subdomain has been delegated
+# to the Route 53 name servers created by the first Terraform apply.
+enable_acm_certificate_validation = false
